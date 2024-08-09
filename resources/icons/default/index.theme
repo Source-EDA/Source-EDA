@@ -1,0 +1,15 @@
+[Icon Theme]
+Name=default
+Comment=Default icon theme. Forked from Boxicons
+
+PanelDefault=22
+PanelSizes=22
+
+Directories=svg
+
+[svg]
+Size=48
+Context=Applications
+MinSize=16
+MaxSize=512
+Type=Scalable

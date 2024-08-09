@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icons/default/index.theme</file>
+        <file>resources/icons/default/svg/create_lib.svg</file>
+        <file>resources/icons/default/svg/create_cell.svg</file>
+        <file>resources/icons/default/svg/create_cellview.svg</file>
+        <file>resources/stylesheet.qss</file>
+        <file>resources/icons/default/svg/error.svg</file>
+        <file>resources/icons/default/svg/info.svg</file>
+        <file>resources/icons/default/svg/warning.svg</file>
+        <file>resources/icons/default/svg/library.svg</file>
+        <file>resources/icons/default/svg/cell.svg</file>
+        <file>resources/icons/default/svg/pencil.svg</file>
+        <file>resources/icons/default/svg/schematic.svg</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,124 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-e2c2106636950a03fe1f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "source_eda",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "release_translations::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-release_translations-Debug-2ea86801b983108211dc.json",
+					"name" : "release_translations",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "source_eda::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-source_eda-Debug-9d24a9be9280f4de4ccc.json",
+					"name" : "source_eda",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "source_eda_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-source_eda_autogen-Debug-a4ecb270a34348338ba9.json",
+					"name" : "source_eda_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "source_eda_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-source_eda_autogen_timestamp_deps-Debug-257ef8412447834bf3a4.json",
+					"name" : "source_eda_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "source_eda_lrelease::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-source_eda_lrelease-Debug-c4c3d67b65adb1061f66.json",
+					"name" : "source_eda_lrelease",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "source_eda_lupdate::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-source_eda_lupdate-Debug-df513fa51ed50fffa1af.json",
+					"name" : "source_eda_lupdate",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "source_eda_other_files::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-source_eda_other_files-Debug-8ed619ae651a5ca82416.json",
+					"name" : "source_eda_other_files",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "update_translations::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-update_translations-Debug-efe2f72ff25502a8ed92.json",
+					"name" : "update_translations",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/adrien/Documents/source_eda/dev/source_eda/build/Qt_6_7_2_for_macOS-Debug",
+		"source" : "/Users/adrien/Documents/source_eda/dev/source_eda"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
