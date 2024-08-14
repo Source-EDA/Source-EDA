@@ -35,6 +35,7 @@ Thumbs.db
 /.qmake.cache
 /.qmake.stash
 build/*macOS*
+build/
 
 # qtcreator generated files
 *.pro.user*
@@ -60,6 +61,7 @@ CMakeLists.txt.user*
 *.opensdf
 *.vcxproj
 *vcxproj.*
+.vscode/
 
 # MinGW generated files
 *.Debug
@@ -73,3 +75,6 @@ CMakeLists.txt.user*
 *.dll
 *.exe
 
+
+# Testing files
+test/
