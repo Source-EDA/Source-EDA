@@ -201,7 +201,7 @@ project_parse_error SourceEDA::checkProjectJSON(void) {
         return PRO_PARSE_WRONG_FORMAT;
     }
     if(project_data["source_eda_version"] > SEDA_VERSION) {
-        qDebug() << "[Error] (Parse Project File) Project's Source EDA version is " << (float) project_data["project_version"] <<  ", whereas Source EDA is only " << SEDA_VERSION << ". Please update Source EDA.";
+        qDebug() << "[Error] (Parse Project File) Project's Source EDA version is " << (float) project_data["source_eda_version"] <<  ", whereas Source EDA is only " << SEDA_VERSION << ". Please update Source EDA.";
         return PRO_PARSE_WRONG_VERSION;
     }
 
