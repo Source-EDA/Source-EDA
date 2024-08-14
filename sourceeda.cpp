@@ -1,5 +1,7 @@
 #include "sourceeda.hpp"
-
+#include <QSettings>
+#include <QStandardPaths>
+ 
 SourceEDA::SourceEDA(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -20,6 +22,10 @@ SourceEDA::SourceEDA(QWidget *parent)
 
     QIcon::setThemeSearchPaths({":/resources/icons"});
     QIcon::setThemeName("default");
+    
+    QCoreApplication::setOrganizationName("SourceEDA");
+    QCoreApplication::setOrganizationDomain("source-eda.com");
+    QCoreApplication::setApplicationName("SourceEDA");
 
     setWindowTitle(tr("Source EDA"));
     setUnifiedTitleAndToolBarOnMac(true);
@@ -150,14 +156,19 @@ void SourceEDA::throwMsgPopup(seda_msg_type msg_type, const QString &title, cons
 
 void SourceEDA::openProjectPopup(void)
 {
+    QSettings settings;
     QFileDialog openProjectDialog(this);
     openProjectDialog.setFileMode(QFileDialog::ExistingFile);
     openProjectDialog.setNameFilter("*.pro");
     openProjectDialog.setViewMode(QFileDialog::Detail);
-    openProjectDialog.setDirectory("/Users/adrien/Documents/source_eda/project_test"); //TODO: remove / Replace by a smarter thing (like last place)
+
+    QString defaultOpenPath = settings.value("editor/defaultOpenProjectPath").toString();
+    openProjectDialog.setDirectory(defaultOpenPath == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : defaultOpenPath);
+
     if(openProjectDialog.exec()) {
         QStringList project_files = openProjectDialog.selectedFiles();
         project_file = new QFile( project_files[0] );
+        settings.setValue("editor/defaultOpenProjectPath", QFileInfo(*project_file).absolutePath());
         project_file->open( QFile::ReadOnly );
         try {
             project_data = json::parse( QString(project_file->readAll()).toStdU32String() );
