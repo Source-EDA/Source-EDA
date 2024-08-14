@@ -42,7 +42,7 @@ public:
 
     // getter / setters
     QString getProjectPath(void) const;
-    void throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message);
+    // void throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message);
 
 private:    
     // graphical functions

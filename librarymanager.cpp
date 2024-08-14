@@ -1,7 +1,8 @@
 #include "librarymanager.hpp"
 
 #include "sourceeda.hpp"
-
+#include "log.hpp"
+#include <QtLogging>
 
 // TODO: split into smaller methods
 LibraryManager::LibraryManager(SourceEDA *project) {
@@ -15,7 +16,8 @@ LibraryManager::LibraryManager(SourceEDA *project) {
             lib_db = json::parse( QString(lib_db_file->readAll()).toStdU32String() );
         } catch (const json::parse_error& e) {
             qDebug() <<  e.what(); // TODO: move to internal debug/log system
-            project->throwMsgPopup(MSG_ERROR, QObject::tr("Libraries database parse error"), QObject::tr("Could not parse the library manager database. See logs for more information."));
+            // project->throwMsgPopup(MSG_ERROR, QObject::tr("Libraries database parse error"), QObject::tr("Could not parse the library manager database. See logs for more information."));
+            Log::log(QtCriticalMsg, QMessageLogContext(), QObject::tr("Libraries database parse error: Could not parse the library manager database. See logs for more information."));
         }
     } else {
         lib_db_file->open( QFile::ReadWrite );

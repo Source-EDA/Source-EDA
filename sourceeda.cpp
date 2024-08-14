@@ -1,7 +1,9 @@
 #include "sourceeda.hpp"
 #include <QSettings>
 #include <QStandardPaths>
- 
+#include "log.hpp"
+#include <QtLogging>
+
 SourceEDA::SourceEDA(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -16,6 +18,7 @@ SourceEDA::SourceEDA(QWidget *parent)
 
     ui->setupUi(this);
 
+    Log::setUp(this);
 
     setupMenusActions();
     setupMenus();
@@ -130,28 +133,28 @@ void SourceEDA::setupMenus(void)
     ui->toolBar->addWidget(popupButton);
 }
 
-void SourceEDA::throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message) {
-    QMessageBox msgPopup(this);
-    QString message_icon_name;
-    switch (msg_type) {
-        case MSG_WARNING:
-            message_icon_name = "warning";
-            break;
-        case MSG_ERROR:
-            message_icon_name = "error";
-            break;
-        case MSG_INFO:
-        default:
-            message_icon_name = "info";
-            break;
-    }
-    msgPopup.setIconPixmap(QIcon::fromTheme(message_icon_name).pixmap(32));
-    msgPopup.setWindowTitle(title);
-    msgPopup.setText(title);
-    msgPopup.setInformativeText(message);
-    msgPopup.setStandardButtons(QMessageBox::Ok);
-    msgPopup.exec();
-}
+// void SourceEDA::throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message) {
+//     QMessageBox msgPopup(this);
+//     QString message_icon_name;
+//     switch (msg_type) {
+//         case MSG_WARNING:
+//             message_icon_name = "warning";
+//             break;
+//         case MSG_ERROR:
+//             message_icon_name = "error";
+//             break;
+//         case MSG_INFO:
+//         default:
+//             message_icon_name = "info";
+//             break;
+//     }
+//     msgPopup.setIconPixmap(QIcon::fromTheme(message_icon_name).pixmap(32));
+//     msgPopup.setWindowTitle(title);
+//     msgPopup.setText(title);
+//     msgPopup.setInformativeText(message);
+//     msgPopup.setStandardButtons(QMessageBox::Ok);
+//     msgPopup.exec();
+// }
 
 
 void SourceEDA::openProjectPopup(void)
@@ -174,7 +177,8 @@ void SourceEDA::openProjectPopup(void)
             project_data = json::parse( QString(project_file->readAll()).toStdU32String() );
         } catch (const json::parse_error& e) {
             qDebug() <<  e.what(); // TODO: move to internal debug/log system
-            throwMsgPopup(MSG_ERROR, tr("Project file parse error"), tr("Could not parse the given project file. See logs for more information."));
+            // throwMsgPopup(MSG_ERROR, tr("Project file parse error"), tr("Could not parse the given project file. See logs for more information."));
+            Log::log(QtCriticalMsg,  QMessageLogContext(), tr("Project file parse error: Could not parse the given project file. See logs for more information."));
         }
         project_file->close();
 
@@ -187,7 +191,8 @@ void SourceEDA::openProjectPopup(void)
                 setupProject();
             } else {
                 project_path = "";
-                throwMsgPopup(MSG_ERROR, tr("Bad project file"), tr("Some data were missing or unexpected in project file. See logs for more information"));
+                // throwMsgPopup(MSG_ERROR, tr("Bad project file"), tr("Some data were missing or unexpected in project file. See logs for more information"));
+                Log::log(QtCriticalMsg,  QMessageLogContext(), tr("Bad project file: Some data were missing or unexpected in project file. See logs for more information"));
             }
         }
     }

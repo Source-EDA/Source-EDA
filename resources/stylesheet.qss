@@ -1,1 +1,20 @@
 QLabel#errorLabel { color: #ae1535; }
+
+
+/* TODO : faire joli */
+LogPopup {
+    background-color: #111111;
+    border-width: 2px;
+    border-radius: 4px;
+    border-color: #000000;
+    min-width: 10em;
+    padding: 1px;
+    background-position: bottom right;
+}
+
+LogPopup QLabel {
+    color: #eeeeee;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+}
