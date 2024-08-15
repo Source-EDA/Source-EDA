@@ -176,9 +176,9 @@ void SourceEDA::openProjectPopup(void)
         try {
             project_data = json::parse( QString(project_file->readAll()).toStdU32String() );
         } catch (const json::parse_error& e) {
-            qDebug() <<  e.what(); // TODO: move to internal debug/log system
             // throwMsgPopup(MSG_ERROR, tr("Project file parse error"), tr("Could not parse the given project file. See logs for more information."));
-            Log::log(QtCriticalMsg,  QMessageLogContext(), tr("Project file parse error: Could not parse the given project file. See logs for more information."));
+            qCritical() << "Project file parse error: Could not parse the given project file. See logs for more information.";
+            qDebug() <<  e.what(); // TODO: move to internal debug/log system
         }
         project_file->close();
 
@@ -192,7 +192,7 @@ void SourceEDA::openProjectPopup(void)
             } else {
                 project_path = "";
                 // throwMsgPopup(MSG_ERROR, tr("Bad project file"), tr("Some data were missing or unexpected in project file. See logs for more information"));
-                Log::log(QtCriticalMsg,  QMessageLogContext(), tr("Bad project file: Some data were missing or unexpected in project file. See logs for more information"));
+                qCritical() << "Bad project file: Some data were missing or unexpected in project file. See logs for more information";
             }
         }
     }
@@ -201,23 +201,23 @@ void SourceEDA::openProjectPopup(void)
 project_parse_error SourceEDA::checkProjectJSON(void) {
     //TODO: log error information in internal debug/log
     if(!project_data.contains("project_name")) {
-        qDebug("[Error] (Parse Project File) Project Name is missing.");
+        qCritical("(Parse Project File) Project Name is missing.");
         return PRO_PARSE_MISSING_DATA;
     }
     if(project_data["project_name"] == "") {
-        qDebug("[Error] (Parse Project File) Project Name shouldn't be empty.");
+        qCritical("(Parse Project File) Project Name shouldn't be empty.");
         return PRO_PARSE_MISSING_DATA;
     }
     if(!project_data.contains("source_eda_version")) {
-        qDebug("[Error] (Parse Project File) Project's Source EDA version is missing.");
+        qCritical("(Parse Project File) Project's Source EDA version is missing.");
         return PRO_PARSE_MISSING_DATA;
     }
     if(!project_data["source_eda_version"].is_number_float()) {
-        qDebug("[Error] (Parse Project File) Project's Source EDA version should be a float.");
+        qCritical("(Parse Project File) Project's Source EDA version should be a float.");
         return PRO_PARSE_WRONG_FORMAT;
     }
     if(project_data["source_eda_version"] > SEDA_VERSION) {
-        qDebug() << "[Error] (Parse Project File) Project's Source EDA version is " << (float) project_data["source_eda_version"] <<  ", whereas Source EDA is only " << SEDA_VERSION << ". Please update Source EDA.";
+        qCritical() << "(Parse Project File) Project's Source EDA version is " << (float) project_data["source_eda_version"] <<  ", whereas Source EDA is only " << SEDA_VERSION << ". Please update Source EDA.";
         return PRO_PARSE_WRONG_VERSION;
     }
 
@@ -407,12 +407,17 @@ QString SourceEDA::getProjectPath(void) const {
     return this->project_path;
 }
 
-
-
 // EVENT
 void SourceEDA::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "Exiting Source EDA"; // TODO: Remove
+    qInfo() << "Exiting Source EDA"; // TODO: Remove
     // TODO: Manage / check / save stuff
     QMainWindow::closeEvent(event);
+}
+
+
+void SourceEDA::resizeEvent(QResizeEvent *event)
+{
+    Log::updatePosition();
+    QWidget::resizeEvent(event);
 }

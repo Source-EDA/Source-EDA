@@ -11,17 +11,17 @@ LibraryManager::LibraryManager(SourceEDA *project) {
 
     if(lib_db_file->exists()) {
         lib_db_file->open( QFile::ReadOnly );
-        qDebug() <<  "[Info] (Lib Manager) Reading Library Manager database."; // TODO: move to internal debug/log system
+        qInfo() <<  "(Lib Manager) Reading Library Manager database."; // TODO: move to internal debug/log system
         try {
             lib_db = json::parse( QString(lib_db_file->readAll()).toStdU32String() );
         } catch (const json::parse_error& e) {
-            qDebug() <<  e.what(); // TODO: move to internal debug/log system
             // project->throwMsgPopup(MSG_ERROR, QObject::tr("Libraries database parse error"), QObject::tr("Could not parse the library manager database. See logs for more information."));
-            Log::log(QtCriticalMsg, QMessageLogContext(), QObject::tr("Libraries database parse error: Could not parse the library manager database. See logs for more information."));
+            qCritical() << "Libraries database parse error: Could not parse the library manager database. See logs for more information.";
+            qDebug() <<  e.what(); // TODO: move to internal debug/log system
         }
     } else {
         lib_db_file->open( QFile::ReadWrite );
-        qDebug() <<  "[Info] (Lib Manager) Library Manager database doesn't exist. Creating it."; // TODO: move to internal debug/log system
+        qInfo() <<  "(Lib Manager) Library Manager database doesn't exist. Creating it."; // TODO: move to internal debug/log system
         lib_db_file->write("[]");
         lib_db = json::parse( "[]" );
     }

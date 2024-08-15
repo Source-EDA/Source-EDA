@@ -44,6 +44,9 @@ public:
     QString getProjectPath(void) const;
     // void throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message);
 
+protected:
+    void resizeEvent(QResizeEvent *event) override;
+
 private:    
     // graphical functions
     void setupVariables(void);
