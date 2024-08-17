@@ -248,6 +248,8 @@ void SourceEDA::setupProject(void) {
 void SourceEDA::populateLibraries(void) {
     json* lib_db = libManager->getDb();
 
+    ui->lib_list->clear();
+
     for(json lib : *lib_db) {
         ui->lib_list->addItem( new QListWidgetItem(QIcon::fromTheme("library"), QString::fromStdString(lib["lib_name"].get<string>()), 0) );
     }
