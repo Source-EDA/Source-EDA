@@ -17,8 +17,10 @@ set(PROJECT_SOURCES
         main.cpp
         sourceeda.cpp sourceeda.hpp
         librarymanager.hpp librarymanager.cpp
+        notification.hpp notification.cpp
+        notificationpopup.hpp notificationpopup.cpp
         log.hpp log.cpp
-        logpopup.hpp logpopup.cpp
+        popup.hpp popup.cpp
         ui/mumwindow.ui
 )
 
@@ -31,7 +33,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ext_libs/json.hpp
         ui/create_cell_popup.ui
         ui/create_cellview_popup.ui
-        ui/logpopup.ui
+        ui/notificationpopup.ui
     )
 
 qt_add_translations(source_eda TS_FILES source_eda_en_GB.ts)

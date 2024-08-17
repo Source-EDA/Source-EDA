@@ -1,26 +1,19 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include <QPlainTextEdit>
 #include <QtLogging>
-#include <QMainWindow>
-#include <list>
-#include "logpopup.hpp"
-
 
 class Log {
-
 public:
-    static void log(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-    static void setUp(QMainWindow * mainWin);
-    static void updatePosition();
-    static void closePopup(LogPopup * popup);
+    static void setup(QPlainTextEdit * plainTextEdit);
+    static void write(QtMsgType level, QString context, QString title, QString text);
+    static void write(QtMsgType level, QString context, QString title);
 
 private:
-    static QMainWindow * main;
-    static QtMessageHandler originalHandler;
-    static std::list<LogPopup *> logs;
-
+    static QPlainTextEdit * logZone;
+    static void write_(QString logMsg);
 };
 
 
-#endif // LOG_H
+#endif //LOG_H

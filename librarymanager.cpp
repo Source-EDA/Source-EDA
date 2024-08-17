@@ -1,6 +1,7 @@
 #include "librarymanager.hpp"
 
 #include "sourceeda.hpp"
+#include "popup.hpp"
 #include "log.hpp"
 #include <QtLogging>
 
@@ -11,17 +12,17 @@ LibraryManager::LibraryManager(SourceEDA *project) {
 
     if(lib_db_file->exists()) {
         lib_db_file->open( QFile::ReadOnly );
-        qInfo() <<  "(Lib Manager) Reading Library Manager database."; // TODO: move to internal debug/log system
+        Log::write(QtInfoMsg, QObject::tr("LibraryManager"), QObject::tr("Reading Library Manager database.")); // TODO: move to internal debug/log system
         try {
             lib_db = json::parse( QString(lib_db_file->readAll()).toStdU32String() );
         } catch (const json::parse_error& e) {
             // project->throwMsgPopup(MSG_ERROR, QObject::tr("Libraries database parse error"), QObject::tr("Could not parse the library manager database. See logs for more information."));
-            qCritical() << "Libraries database parse error: Could not parse the library manager database. See logs for more information.";
-            qDebug() <<  e.what(); // TODO: move to internal debug/log system
+            Popup::popup(QtWarningMsg, QObject::tr("LibraryManager"), QObject::tr("Libraries database parse error"), QObject::tr("Could not parse the library manager database. See logs for more information."));
+            Log::write(QtWarningMsg, QObject::tr("LibraryManager"), QObject::tr("Libraries database parse error"), e.what()); // TODO: move to internal debug/log system
         }
     } else {
         lib_db_file->open( QFile::ReadWrite );
-        qInfo() <<  "(Lib Manager) Library Manager database doesn't exist. Creating it."; // TODO: move to internal debug/log system
+        Log::write(QtInfoMsg, QObject::tr("LibraryManager"), QObject::tr("Library Manager database doesn't exist. Creating it.")); // TODO: move to internal debug/log system
         lib_db_file->write("[]");
         lib_db = json::parse( "[]" );
     }
