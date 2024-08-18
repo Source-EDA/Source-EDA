@@ -169,8 +169,8 @@ void SourceEDA::openProjectPopup(void)
     openProjectDialog.setNameFilter("*.pro");
     openProjectDialog.setViewMode(QFileDialog::Detail);
 
-    QString defaultOpenPath = settings.value("lib/defaultOpenProjectPath").toString();
-    openProjectDialog.setDirectory(defaultOpenPath == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : defaultOpenPath);
+    QString defaultOpenPath = settings.value("lib/defaultOpenProjectPath", QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).toString();
+    openProjectDialog.setDirectory(defaultOpenPath);
 
     if(openProjectDialog.exec()) {
         QStringList project_files = openProjectDialog.selectedFiles();
