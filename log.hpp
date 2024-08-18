@@ -12,6 +12,8 @@ public:
 
 private:
     static QPlainTextEdit * logZone;
+    static QFile logFile;
+    static QDate currentDate;
     static void write_(QString logMsg);
 };
 
