@@ -44,6 +44,9 @@ SourceEDA::~SourceEDA()
     delete uiLibPopup;
     delete uiCellPopup;
     delete uiCellviewPopup;
+
+    // TODO: delete ui for each design windows
+    // TODO : probably more delete -> check with valgrind
 }
 
 
@@ -105,7 +108,7 @@ void SourceEDA::setupMenusActions(void)
     connect(ui->cell_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(unfoldCell(QListWidgetItem*)));
     ui->cell_list->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->cell_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(cellListContextMenu(QPoint)));
-    //connect(ui->cellview_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(/*TODO: OPEN CELLVIEW IN NEW WINDOW*/));
+    connect(ui->cellview_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openCellview(QListWidgetItem*)));
     ui->cellview_list->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->cellview_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(cellviewListContextMenu(QPoint)));
 
@@ -132,14 +135,16 @@ void SourceEDA::setupMenus(void)
     ui->toolBar->addAction(menuActionNewCell);
     ui->toolBar->addWidget(menuActionNewCellview);
 
-    ui->toolBar->addSeparator();
+    // TODO: decide if for cellview we use a dropdown menu
+    /*ui->toolBar->addSeparator();
+
     QToolButton *popupButton = new QToolButton(ui->toolBar);
     popupButton->setIcon(QIcon::fromTheme("create_cellview"));
     popupButton->setPopupMode(QToolButton::MenuButtonPopup);
     QMenu *popupMenu = new QMenu(popupButton);
     popupMenu->addAction(tr("test"));
     popupButton->setMenu(popupMenu);
-    ui->toolBar->addWidget(popupButton);
+    ui->toolBar->addWidget(popupButton);*/
 }
 
 // void SourceEDA::throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message) {
@@ -475,12 +480,25 @@ void SourceEDA::unfoldCell(QListWidgetItem *cell_item) {
         ui->cellview_list->addItem(cellview_name);
     }
 }
+void SourceEDA::openCellview(QListWidgetItem *cellview_item) {
+    DesignWindow *new_window = new DesignWindow(ui->lib_list->currentItem()->text(), ui->cell_list->currentItem()->text(),
+                                                cellview_item->text(), this);
+
+    this->design_windows.push_back(new_window);
+    //TODO: remove from list when window is closed
+
+    new_window->show();
+}
+
 
 
 // GETTERS / SETTERS
 // getter / setters
 QString SourceEDA::getProjectPath(void) const {
     return this->project_path;
+}
+QString SourceEDA::getProjectName(void) const {
+    return QString::fromStdString(project_data["project_name"]);
 }
 
 // EVENT

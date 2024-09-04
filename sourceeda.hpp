@@ -16,6 +16,7 @@
 #include "ext_libs/json.hpp"
 
 #include "librarymanager.hpp"
+#include "designwindow.hpp"
 
 
 #define SEDA_VERSION 0.1
@@ -42,6 +43,7 @@ public:
 
     // getter / setters
     QString getProjectPath(void) const;
+    QString getProjectName(void) const;
     // void throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message);
 
 protected:
@@ -64,6 +66,9 @@ private:
     Ui::CreateLibPopup *uiLibPopup;
     Ui::CreateCellPopup *uiCellPopup;
     Ui::CreateCellviewPopup *uiCellviewPopup;
+
+    // Windows
+    vector<DesignWindow*> design_windows;
 
     //general variables
     QString stylesheetContent;
@@ -104,6 +109,7 @@ private slots:
     void createCellview(void);
     void unfoldLib(QListWidgetItem *lib_item);
     void unfoldCell(QListWidgetItem *cell_item);
+    void openCellview(QListWidgetItem *cellview_item);
 };
 
 #endif // SOURCEEDA_H

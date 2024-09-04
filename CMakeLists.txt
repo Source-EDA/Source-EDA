@@ -34,6 +34,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ui/create_cell_popup.ui
         ui/create_cellview_popup.ui
         ui/notificationpopup.ui
+        designwindow.hpp designwindow.cpp ui/designwindow.ui
     )
 
 qt_add_translations(source_eda TS_FILES source_eda_en_GB.ts)
