@@ -99,10 +99,15 @@ void SourceEDA::setupMenusActions(void)
     connect(uiCellPopup->buttonBox, &QDialogButtonBox::accepted, this, &SourceEDA::createCell);
     connect(uiCellPopup->buttonBox, &QDialogButtonBox::rejected, createCellPopup, &QDialog::close);
 
-    connect(ui->lib_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(unfoldLib(QListWidgetItem*)));
-    connect(ui->cell_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(unfoldCell(QListWidgetItem*)));
+    connect(ui->lib_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(unfoldLib(QListWidgetItem*)));
+    ui->lib_list->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->lib_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(libListContextMenu(QPoint)));
+    connect(ui->cell_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(unfoldCell(QListWidgetItem*)));
     ui->cell_list->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->cell_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(cellListContextMenu(QPoint)));
+    //connect(ui->cellview_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(/*TODO: OPEN CELLVIEW IN NEW WINDOW*/));
+    ui->cellview_list->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->cellview_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(cellviewListContextMenu(QPoint)));
 
     uiCellviewPopup->setupUi(createCellviewPopup);
     connect(uiCellviewPopup->libCombo, SIGNAL(currentTextChanged(QString)), this, SLOT(updateCellviewCells(QString)));
@@ -257,6 +262,30 @@ void SourceEDA::populateLibraries(void) {
 
 
 // CREATE LIB POPUP
+void SourceEDA::libListContextMenu(const QPoint &pos) {
+    QMenu contextMenu(tr("Context menu"), this);
+
+    QAction create_lib_action("Create library", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    connect(&create_lib_action, &QAction::triggered, this, &SourceEDA::openCreateLibPopup);
+
+    QAction rename_lib_action("Rename library", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    QAction delete_lib_action("Delete library", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    // TODO: connect actions to a slot
+
+    QListWidgetItem *item = ui->lib_list->itemAt(pos);
+    if(item != nullptr) {
+        contextMenu.addAction(&rename_lib_action);
+        contextMenu.addAction(&delete_lib_action);
+
+        contextMenu.addSeparator();
+    }
+
+    contextMenu.addSeparator();
+
+    contextMenu.addAction(&create_lib_action);
+
+    contextMenu.exec(ui->lib_list->mapToGlobal(pos));
+}
 void SourceEDA::openCreateLibPopup(void)
 {
     if(createLibPopup->isVisible()) {
@@ -280,9 +309,24 @@ void SourceEDA::createLib(void) {
 void SourceEDA::cellListContextMenu(const QPoint &pos) {
     QMenu contextMenu(tr("Context menu"), this);
 
-    QAction create_cell_action("Create cell here", this); //TODO: generalyse with class pointer ?
+    QAction create_cell_action("Create cell here", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
     connect(&create_cell_action, &QAction::triggered, this,
             [=]() { openCreateCellPopup(ui->lib_list->currentItem()->text()); }); // lambda to pass a parameter to slot
+
+    QAction rename_cell_action("Rename cell", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    QAction delete_cell_action("Delete cell", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    // TODO: connect actions to a slot
+
+    QListWidgetItem *item = ui->cell_list->itemAt(pos);
+    if(item != nullptr) {
+        contextMenu.addAction(&rename_cell_action);
+        contextMenu.addAction(&delete_cell_action);
+
+        contextMenu.addSeparator();
+    }
+
+    contextMenu.addSeparator();
+
     contextMenu.addAction(&create_cell_action);
 
     contextMenu.exec(ui->cell_list->mapToGlobal(pos));
@@ -317,6 +361,31 @@ void SourceEDA::createCell(void) {
     } else {
         uiCellPopup->errorLabel->setText(tr("Error")); // TODO: better error
     }
+}
+void SourceEDA::cellviewListContextMenu(const QPoint &pos) {
+    QMenu contextMenu(tr("Context menu"), this);
+
+    QAction create_cellview_action("Create cellview here", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    connect(&create_cellview_action, &QAction::triggered, this,
+            [=]() { openCreateCellviewPopup(ui->lib_list->currentItem()->text(), ui->cell_list->currentItem()->text()); }); // lambda to pass a parameter to slot
+
+    QAction rename_cellview_action("Rename cellview", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    QAction delete_cellview_action("Delete cellview", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
+    // TODO: connect actions to a slot
+
+    QListWidgetItem *item = ui->cellview_list->itemAt(pos);
+    if(item != nullptr) {
+        contextMenu.addAction(&rename_cellview_action);
+        contextMenu.addAction(&delete_cellview_action);
+
+        contextMenu.addSeparator();
+    }
+
+    contextMenu.addSeparator();
+
+    contextMenu.addAction(&create_cellview_action);
+
+    contextMenu.exec(ui->cellview_list->mapToGlobal(pos));
 }
 void SourceEDA::openCreateCellviewPopup(const QString &for_lib, const QString &for_cell, const QString &cv_type) {
     if(createCellviewPopup->isVisible()) {

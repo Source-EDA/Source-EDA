@@ -92,11 +92,13 @@ private:
 private slots:
     void openProjectPopup(void);
 
+    void libListContextMenu(const QPoint &pos);
     void openCreateLibPopup(void);
     void createLib(void);
     void cellListContextMenu(const QPoint &pos);
     void openCreateCellPopup(const QString &for_lib = "");
     void createCell(void);
+    void cellviewListContextMenu(const QPoint &pos);
     void openCreateCellviewPopup(const QString &for_lib = "", const QString &for_cell = "", const QString &cv_type = "");
     void updateCellviewCells(const QString &lib_name);
     void createCellview(void);

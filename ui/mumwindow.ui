@@ -88,6 +88,9 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
           </property>
