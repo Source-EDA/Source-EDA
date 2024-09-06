@@ -1,4 +1,4 @@
-#include "sourceeda.hpp"
+#include "projectManager/sourceeda.hpp"
 
 #include <QApplication>
 

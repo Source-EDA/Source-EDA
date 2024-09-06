@@ -1,7 +1,7 @@
 #include "designwindow.hpp"
 #include "ui/ui_designwindow.h"
 
-#include "sourceeda.hpp"
+#include "projectManager/sourceeda.hpp"
 
 
 DesignWindow::DesignWindow(const QString& lib, const QString& cell, const QString& cellview, SourceEDA *parent)

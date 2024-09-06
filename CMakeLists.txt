@@ -15,8 +15,9 @@ find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
 set(PROJECT_SOURCES
         main.cpp
-        sourceeda.cpp sourceeda.hpp
-        librarymanager.hpp librarymanager.cpp
+        projectManager/sourceeda.cpp projectManager/sourceeda.hpp
+        projectManager/librarymanager.hpp projectManager/librarymanager.cpp
+        projectManager/popup/createlib.hpp projectManager/popup/createlib.cpp
         notification.hpp notification.cpp
         notificationpopup.hpp notificationpopup.cpp
         log.hpp log.cpp
@@ -34,6 +35,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ui/create_cell_popup.ui
         ui/create_cellview_popup.ui
         ui/notificationpopup.ui
+        ui/rename_lib_popup.ui
         designwindow.hpp designwindow.cpp ui/designwindow.ui
     )
 
