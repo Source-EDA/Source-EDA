@@ -87,7 +87,7 @@ void SourceEDA::setupMenusActions(void)
 
     menuActionNewCell = new QAction(QIcon::fromTheme("create_cell"), tr("&New Cell"), this);
     menuActionNewCell->setEnabled(false);
-    connect(menuActionNewCell, SIGNAL(triggered()), this, SLOT(openCreateCellPopup()));
+    connect(menuActionNewCell, &QAction::triggered, createCellPopup, &CreateCell::openCreateCellPopupNoLib);
 
     //menuActionNewCellview = new QAction(QIcon::fromTheme("create_cellview"), tr("&New Cellview"), this);
     menuActionNewCellview = new QToolButton(this);

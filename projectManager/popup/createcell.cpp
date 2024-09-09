@@ -14,6 +14,10 @@ CreateCell::~CreateCell() {
     delete uiCellPopup;
 }
 
+void CreateCell::openCreateCellPopupNoLib(void) {
+    this->openCreateCellPopup(NULL);
+}
+
 
 void CreateCell::openCreateCellPopup(QListWidgetItem *for_lib) {
     if(this->isVisible()) {
@@ -26,7 +30,7 @@ void CreateCell::openCreateCellPopup(QListWidgetItem *for_lib) {
             uiCellPopup->cellLibCombo->addItem(QString::fromStdString(lib["lib_name"].get<string>()));
         }
 
-        if(for_lib->text() != "") {
+        if(for_lib != NULL) {
             uiCellPopup->cellLibCombo->setCurrentText(for_lib->text());
         }
 
@@ -41,7 +45,9 @@ void CreateCell::createCell(void) {
                                                      uiCellPopup->cellNameEdit->text());
 
     if(!errCode) {
-        seda->unfoldLib(current_lib);
+        if(current_lib != NULL) {
+            seda->unfoldLib(current_lib);
+        }
         // if(ui->lib_list->currentItem()->text() == uiCellPopup->cellLibCombo->currentText()) {
         //     ui->cell_list->addItem( new QListWidgetItem(QIcon::fromTheme("cell"), uiCellPopup->cellNameEdit->text(), 0) );
         // }

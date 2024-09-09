@@ -22,7 +22,8 @@ public:
     CreateCell(SourceEDA *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~CreateCell();
 
-    void openCreateCellPopup(QListWidgetItem *for_lib);
+    void openCreateCellPopup(QListWidgetItem *for_lib = NULL);
+    void openCreateCellPopupNoLib(void);
     void createCell(void);
 
 private:    
@@ -31,7 +32,6 @@ private:
     void setupMenus(void);
     Ui::CreateCellPopup *uiCellPopup;
     QListWidgetItem *current_lib;
-    // QWidget *createLibPopup;
 
     SourceEDA *seda;
 

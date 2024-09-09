@@ -1,15 +1,13 @@
 #include "createlib.hpp"
 #include "../librarymanager.hpp"
 
-CreateLib::CreateLib(SourceEDA * parent) : QWidget(parent) {
+CreateLib::CreateLib(SourceEDA * parent) : QWidget(parent, Qt::Window) {
     seda = parent;
     uiLibPopup = new Ui::CreateLibPopup;
 
     uiLibPopup->setupUi(this);
     connect(uiLibPopup->buttonBox, &QDialogButtonBox::accepted, this, &CreateLib::createLib);
     connect(uiLibPopup->buttonBox, &QDialogButtonBox::rejected, this, &QWidget::close);
-
-    // createLibPopup = new QWidget(parent, Qt::Window);
 }
 
 CreateLib::~CreateLib() {
