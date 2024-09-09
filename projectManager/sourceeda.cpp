@@ -41,8 +41,8 @@ SourceEDA::SourceEDA(QWidget *parent)
 SourceEDA::~SourceEDA()
 {
     delete ui;
-    delete uiLibPopup;
-    delete uiCellPopup;
+    // delete uiLibPopup;
+    // delete uiCellPopup;
     delete uiCellviewPopup;
     delete uiRenameLibPopup;
 
@@ -58,7 +58,9 @@ void SourceEDA::setupVariables(void) {
     ui = new Ui::SourceEDAWindow;
 
     createLibPopup = new CreateLib(this);
-    createCellPopup = new QDialog(this, Qt::Window);
+    // uiCellPopup = new Ui::CreateCellPopup;
+    // createCellPopup = new QDialog(this, Qt::Window);
+    createCellPopup = new CreateCell(this, Qt::Window);
     uiCellviewPopup = new Ui::CreateCellviewPopup;
     createCellviewPopup = new QDialog(this, Qt::Window);
     uiRenameLibPopup = new Ui::RenameLibPopup;
@@ -103,9 +105,6 @@ void SourceEDA::setupMenusActions(void)
     connect(uiRenameLibPopup->buttonBox, &QDialogButtonBox::rejected, renameLibPopup, &QWidget::close);
 
 
-    uiCellPopup->setupUi(createCellPopup);
-    connect(uiCellPopup->buttonBox, &QDialogButtonBox::accepted, this, &SourceEDA::createCell);
-    connect(uiCellPopup->buttonBox, &QDialogButtonBox::rejected, createCellPopup, &QDialog::close);
 
     connect(ui->lib_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(unfoldLib(QListWidgetItem*)));
     ui->lib_list->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -303,34 +302,34 @@ void SourceEDA::libListContextMenu(const QPoint &pos) {
 
 void SourceEDA::openRenameLibPopup(const QString &oldName)
 {
-    if(renameLibPopup->isVisible()) {
-        renameLibPopup->raise();
-    } else {
-        uiLibPopup->libNameEdit->setText(oldName);
-        uiLibPopup->errorLabel->setText("");
-        renameLibPopup->show();
-    }
+    // if(renameLibPopup->isVisible()) {
+    //     renameLibPopup->raise();
+    // } else {
+    //     uiLibPopup->libNameEdit->setText(oldName);
+    //     uiLibPopup->errorLabel->setText("");
+    //     renameLibPopup->show();
+    // }
 }
 
 
 void SourceEDA::renameLib(void) {
 
-    LibManagerError errCode = libManager->renameLib("", uiLibPopup->libNameEdit->text());
+    // LibManagerError errCode = libManager->renameLib("", uiLibPopup->libNameEdit->text());
 
-    if(!errCode) {
-        ui->lib_list->addItem( new QListWidgetItem(QIcon::fromTheme("library"), uiLibPopup->libNameEdit->text(), 0) );
-        createLibPopup->close();
-    } else {
-        uiLibPopup->errorLabel->setText(tr("Error")); // TODO: better error
-    }
+    // if(!errCode) {
+    //     ui->lib_list->addItem( new QListWidgetItem(QIcon::fromTheme("library"), uiLibPopup->libNameEdit->text(), 0) );
+    //     createLibPopup->close();
+    // } else {
+    //     uiLibPopup->errorLabel->setText(tr("Error")); // TODO: better error
+    // }
 }
 
 void SourceEDA::cellListContextMenu(const QPoint &pos) {
     QMenu contextMenu(tr("Context menu"), this);
 
     QAction create_cell_action("Create cell here", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    connect(&create_cell_action, &QAction::triggered, this,
-            [=]() { openCreateCellPopup(ui->lib_list->currentItem()->text()); }); // lambda to pass a parameter to slot
+    connect(&create_cell_action, &QAction::triggered, createCellPopup,
+            [this]() { createCellPopup->openCreateCellPopup(ui->lib_list->currentItem()); }); // lambda to pass a parameter to slot
 
     QAction rename_cell_action("Rename cell", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
     QAction delete_cell_action("Delete cell", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
@@ -350,37 +349,7 @@ void SourceEDA::cellListContextMenu(const QPoint &pos) {
 
     contextMenu.exec(ui->cell_list->mapToGlobal(pos));
 }
-void SourceEDA::openCreateCellPopup(const QString &for_lib) {
-    if(createCellPopup->isVisible()) {
-        createCellPopup->raise();
-    } else {
-        uiCellPopup->cellLibCombo->clear();
-        for(json lib : *libManager->getDb()) {
-            uiCellPopup->cellLibCombo->addItem(QString::fromStdString(lib["lib_name"].get<string>()));
-        }
 
-        if(for_lib != "") {
-            uiCellPopup->cellLibCombo->setCurrentText(for_lib);
-        }
-
-        uiCellPopup->cellNameEdit->setText("");
-        uiCellPopup->errorLabel->setText("");
-        createCellPopup->show();
-    }
-}
-void SourceEDA::createCell(void) {
-    LibManagerError errCode = libManager->createCell(uiCellPopup->cellLibCombo->currentText(),
-                                                     uiCellPopup->cellNameEdit->text());
-
-    if(!errCode) {
-        if(ui->lib_list->currentItem()->text() == uiCellPopup->cellLibCombo->currentText()) {
-            ui->cell_list->addItem( new QListWidgetItem(QIcon::fromTheme("cell"), uiCellPopup->cellNameEdit->text(), 0) );
-        }
-        createCellPopup->close();
-    } else {
-        uiCellPopup->errorLabel->setText(tr("Error")); // TODO: better error
-    }
-}
 
 void SourceEDA::cellviewListContextMenu(const QPoint &pos) {
     QMenu contextMenu(tr("Context menu"), this);
@@ -531,3 +500,9 @@ void SourceEDA::resizeEvent(QResizeEvent *event)
     Notification::updatePosition();
     QWidget::resizeEvent(event);
 }
+
+// void SourceEDA::addCell(QString &lib, QString &name) {
+//     if(ui->lib_list->currentItem()->text() == name) {
+//         ui->cell_list->addItem( new QListWidgetItem(QIcon::fromTheme("cell"), name, 0) );
+//     }
+// }

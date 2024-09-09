@@ -1,6 +1,6 @@
 
-#ifndef CREATELIB_H
-#define CREATELIB_H
+#ifndef CREATECELL_H
+#define CREATECELL_H
 
 #include <QMainWindow>
 #include <QMessageBox>
@@ -14,22 +14,23 @@
 
 
 
-class CreateLib : public QWidget
+class CreateCell : public QDialog
 {
     Q_OBJECT
 
 public:
-    CreateLib(SourceEDA *parent = nullptr);
-    ~CreateLib();
+    CreateCell(SourceEDA *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    ~CreateCell();
 
-    void openCreateLibPopup(void);
-    void createLib(void);
+    void openCreateCellPopup(QListWidgetItem *for_lib);
+    void createCell(void);
 
 private:    
     // graphical functions
     void setupMenusActions(void);
     void setupMenus(void);
-    Ui::CreateLibPopup *uiLibPopup;
+    Ui::CreateCellPopup *uiCellPopup;
+    QListWidgetItem *current_lib;
     // QWidget *createLibPopup;
 
     SourceEDA *seda;
@@ -37,4 +38,4 @@ private:
 
 };
 
-#endif // CREATELIB_H
+#endif // CREATECELL_H
