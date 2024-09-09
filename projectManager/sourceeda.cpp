@@ -58,8 +58,6 @@ void SourceEDA::setupVariables(void) {
     ui = new Ui::SourceEDAWindow;
 
     createLibPopup = new CreateLib(this);
-    // uiCellPopup = new Ui::CreateCellPopup;
-    // createCellPopup = new QDialog(this, Qt::Window);
     createCellPopup = new CreateCell(this, Qt::Window);
     uiCellviewPopup = new Ui::CreateCellviewPopup;
     createCellviewPopup = new QDialog(this, Qt::Window);
@@ -500,9 +498,3 @@ void SourceEDA::resizeEvent(QResizeEvent *event)
     Notification::updatePosition();
     QWidget::resizeEvent(event);
 }
-
-// void SourceEDA::addCell(QString &lib, QString &name) {
-//     if(ui->lib_list->currentItem()->text() == name) {
-//         ui->cell_list->addItem( new QListWidgetItem(QIcon::fromTheme("cell"), name, 0) );
-//     }
-// }

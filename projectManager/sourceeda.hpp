@@ -9,8 +9,6 @@
 #include <QListWidgetItem>
 
 #include "../ui/ui_mumwindow.h"
-#include "../ui/ui_create_lib_popup.h"
-#include "../ui/ui_create_cell_popup.h"
 #include "../ui/ui_create_cellview_popup.h"
 #include "../ui/ui_rename_lib_popup.h"
 
