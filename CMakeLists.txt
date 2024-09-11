@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         projectManager/librarymanager.hpp projectManager/librarymanager.cpp
         projectManager/popup/createlib.hpp projectManager/popup/createlib.cpp
         projectManager/popup/createcell.hpp projectManager/popup/createcell.cpp
+        projectManager/popup/createcellview.hpp projectManager/popup/createcellview.cpp
         notification.hpp notification.cpp
         notificationpopup.hpp notificationpopup.cpp
         log.hpp log.cpp

@@ -22,8 +22,10 @@ public:
     CreateCell(SourceEDA *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~CreateCell();
 
+public slots:
+
     void openCreateCellPopup(QListWidgetItem *for_lib = NULL);
-    void openCreateCellPopupNoLib(void);
+    // void openCreateCellPopupNoLib(void);
     void createCell(void);
 
 private:    

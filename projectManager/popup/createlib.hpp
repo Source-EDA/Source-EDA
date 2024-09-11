@@ -22,6 +22,7 @@ public:
     CreateLib(SourceEDA *parent = nullptr);
     ~CreateLib();
 
+public slots:
     void openCreateLibPopup(void);
     void createLib(void);
 

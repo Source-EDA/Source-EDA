@@ -14,9 +14,9 @@ CreateCell::~CreateCell() {
     delete uiCellPopup;
 }
 
-void CreateCell::openCreateCellPopupNoLib(void) {
-    this->openCreateCellPopup(NULL);
-}
+// void CreateCell::openCreateCellPopupNoLib(void) {
+//     this->openCreateCellPopup(NULL);
+// }
 
 
 void CreateCell::openCreateCellPopup(QListWidgetItem *for_lib) {
