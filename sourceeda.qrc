@@ -10,7 +10,8 @@
         <file>resources/icons/default/svg/warning.svg</file>
         <file>resources/icons/default/svg/library.svg</file>
         <file>resources/icons/default/svg/cell.svg</file>
-        <file>resources/icons/default/svg/pencil.svg</file>
+        <file>resources/icons/default/svg/layout.svg</file>
         <file>resources/icons/default/svg/schematic.svg</file>
+        <file>resources/icons/default/svg/cellview.svg</file>
     </qresource>
 </RCC>

@@ -30,7 +30,7 @@ public:
     //getters / setters
     json* getDb(void);
     QStringList getCellsFromLib(const QString lib_name);
-    QStringList getCellviewsFromCell(const QString lib_name, const QString cell_name);
+    int8_t getCellviewsNameTypeFromCell(const QString lib_name, const QString cell_name, map<QString, QString> *cv_info);
     static QStringList getCellviewTypes(void);
 
 private:

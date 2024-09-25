@@ -116,18 +116,63 @@ QStringList LibraryManager::getCellsFromLib(const QString lib_name) {
     lib_dir.setPath(project->getProjectPath() + "libraries/" + lib_name);
     return lib_dir.entryList(QDir::Dirs | QDir::NoDot | QDir::NoDotDot);
 }
-QStringList LibraryManager::getCellviewsFromCell(const QString lib_name, const QString cell_name) {
+int8_t LibraryManager::getCellviewsNameTypeFromCell(const QString lib_name, const QString cell_name, map<QString, QString> *cv_info) {
     QDir cell_dir;
     cell_dir.setPath(project->getProjectPath() + "libraries/" + lib_name + "/" + cell_name);
 
     //TODO: maybe here a json in the cell, listing the cellviews, would be cleaner. With a list of
     //      the cellnames, would avoid to strip the filenames here
     QStringList files = cell_dir.entryList(QDir::Files | QDir::NoDot | QDir::NoDotDot);
+
+    cv_info->empty();
+
     for(auto it = files.begin(); it != files.end(); ++it) {
-        *it = it->split(".")[0];
+        //TODO: open file
+        //  - check filename == filename in JSON
+        //  - get type, add both in Qstring[2] list
+        QFile cv_file(cell_dir.absoluteFilePath(*it));
+        json file_json;
+
+        //TODO: maybe split into smaller functions ? mostly for the checks
+
+        if(cv_file.exists()) {
+            cv_file.open( QFile::ReadOnly );
+
+            try {
+                file_json = json::parse( QString(cv_file.readAll()).toStdU32String() );
+            } catch (const json::parse_error& e) {
+                // TODO: write proper error log
+                Log::write(QtWarningMsg, QObject::tr("LibraryManager"), QObject::tr("Error ..."));
+                return 2;
+            }
+
+            if(!file_json.contains("cellview_name")) {
+                // TODO: write proper error log
+                Log::write(QtWarningMsg, QObject::tr("LibraryManager"), QObject::tr("Error ..."));
+                return 3;
+            }
+            if(QString::fromStdString(file_json["cellview_name"]) != it->split(".")[0]) { // compare file name and name in json
+                // TODO: write proper error log
+                Log::write(QtWarningMsg, QObject::tr("LibraryManager"), QObject::tr("Error ..."));
+                return 4;
+            }
+            if(!file_json.contains("cellview_type")) {
+                // TODO: write proper error log
+                Log::write(QtWarningMsg, QObject::tr("LibraryManager"), QObject::tr("Error ..."));
+                return 5;
+            }
+
+            cv_info->insert({QString::fromStdString(file_json["cellview_name"]), QString::fromStdString(file_json["cellview_type"])});
+        } else {
+            // TODO: write proper error log
+            Log::write(QtInfoMsg, QObject::tr("LibraryManager"), QObject::tr("Error ..."));
+            return 1;
+        }
+
+        cv_file.close();
     }
 
-    return files;
+    return 0;
 }
 
 map<QString, QString> LibraryManager::cellviewTypesExt = {{"schematic", "sch"}, {"layout", "lay"}, {"symbol", "sym"}};

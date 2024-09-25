@@ -28,8 +28,18 @@ void CellviewList::showCellview(const QString & fromLibrary, const QString &from
     LibraryManager *libManager = seda->getLibraryManager();
     currentLib = fromLibrary;
     currentCell = fromCell;
-    for(QString cellviewName : libManager->getCellviewsFromCell(fromLibrary, fromCell)) {
-        this->addItem( new QListWidgetItem(QIcon::fromTheme("cell"), cellviewName + "(" + "[type]" + ")", 0) );
+
+    map<QString, QString> cv_infos; // TODO: const Qstring ? const &Qstring ? what is better ?
+
+    int8_t return_status = libManager->getCellviewsNameTypeFromCell(fromLibrary, fromCell, &cv_infos);
+
+    for (std::map<QString, QString>::const_iterator it = cv_infos.begin(); it != cv_infos.end(); ++it) {
+        QString cvIconName = "cellview";
+        if(LibraryManager::getCellviewTypes().contains(it->second)) {
+            cvIconName = it->second;
+        }
+
+        this->addItem( new QListWidgetItem(QIcon::fromTheme(cvIconName), it->first, 0) );
     }
 }
 
