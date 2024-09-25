@@ -20,6 +20,9 @@ set(PROJECT_SOURCES
         projectManager/popup/createlib.hpp projectManager/popup/createlib.cpp
         projectManager/popup/createcell.hpp projectManager/popup/createcell.cpp
         projectManager/popup/createcellview.hpp projectManager/popup/createcellview.cpp
+        projectManager/parts/liblist.hpp projectManager/parts/liblist.cpp
+        projectManager/parts/celllist.hpp projectManager/parts/celllist.cpp
+        projectManager/parts/cellviewlist.hpp projectManager/parts/cellviewlist.cpp
         notification.hpp notification.cpp
         notificationpopup.hpp notificationpopup.cpp
         log.hpp log.cpp
@@ -77,6 +80,7 @@ set_target_properties(source_eda PROPERTIES
     MACOSX_BUNDLE_BUNDLE_NAME "Source EDA"
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include(GNUInstallDirs)
 install(TARGETS source_eda

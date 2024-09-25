@@ -6,19 +6,20 @@
 #include "../popup.hpp"
 #include <QtLogging>
 
+#include "parts/liblist.hpp"
+#include "../ui/ui_mumwindow.h"
+
 SourceEDA::SourceEDA(QWidget *parent)
     : QMainWindow(parent)
 {
     setupVariables();
 
     // style
-    QFile styleFile( ":/resources/stylesheet.qss" );
-    styleFile.open( QFile::ReadOnly );
-    stylesheetContent = QString(styleFile.readAll());
-    this->setStyleSheet( stylesheetContent );
-    createLibPopup->setStyleSheet(stylesheetContent);
 
     ui->setupUi(this);
+    ui->lib_list->setSEDA(this, createLibPopup);
+    ui->cell_list->setSEDA(this, createCellPopup);
+    ui->cellview_list->setSEDA(this, createCellviewPopup);
 
     Notification::setUp(this);
     Log::setup(ui->logTextZone);
@@ -41,9 +42,6 @@ SourceEDA::SourceEDA(QWidget *parent)
 SourceEDA::~SourceEDA()
 {
     delete ui;
-    // delete uiLibPopup;
-    // delete uiCellPopup;
-    // delete uiCellviewPopup;
     delete uiRenameLibPopup;
 
     // TODO: delete ui for each design windows
@@ -69,6 +67,7 @@ void SourceEDA::setupVariables(void) {
     project_path = "";
     project_opened = false;
 }
+
 
 void SourceEDA::setupMenusActions(void)
 {
@@ -96,7 +95,7 @@ void SourceEDA::setupMenusActions(void)
     QMenu popupMenu(menuActionNewCellview);
     popupMenu.addAction(tr("test"));
     menuActionNewCellview->setMenu(&popupMenu);
-    // connect(menuActionNewCellview, &QAction::triggered, this,   [=](){createCellviewPopup->openCreateCellviewPopup();});
+    connect(menuActionNewCellview, SIGNAL(clicked()),createCellviewPopup, SLOT(openCreateCellviewPopup()));
     // TODO: open menu with right click ? -> need to override QPushButton::mousePressEvent()
 
     uiRenameLibPopup->setupUi(renameLibPopup);
@@ -105,15 +104,7 @@ void SourceEDA::setupMenusActions(void)
 
 
 
-    connect(ui->lib_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(unfoldLib(QListWidgetItem*)));
-    ui->lib_list->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->lib_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(libListContextMenu(QPoint)));
-    connect(ui->cell_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(unfoldCell(QListWidgetItem*)));
-    ui->cell_list->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->cell_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(cellListContextMenu(QPoint)));
     connect(ui->cellview_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openCellview(QListWidgetItem*)));
-    ui->cellview_list->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->cellview_list, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(cellviewListContextMenu(QPoint)));
 
     // uiCellviewPopup->setupUi(createCellviewPopup);
     // connect(uiCellviewPopup->libCombo, SIGNAL(currentTextChanged(QString)), this, SLOT(updateCellviewCells(QString)));
@@ -149,30 +140,6 @@ void SourceEDA::setupMenus(void)
     popupButton->setMenu(popupMenu);
     ui->toolBar->addWidget(popupButton);*/
 }
-
-// void SourceEDA::throwMsgPopup(seda_msg_type msg_type, const QString &title, const QString &message) {
-//     QMessageBox msgPopup(this);
-//     QString message_icon_name;
-//     switch (msg_type) {
-//         case MSG_WARNING:
-//             message_icon_name = "warning";
-//             break;
-//         case MSG_ERROR:
-//             message_icon_name = "error";
-//             break;
-//         case MSG_INFO:
-//         default:
-//             message_icon_name = "info";
-//             break;
-//     }
-//     msgPopup.setIconPixmap(QIcon::fromTheme(message_icon_name).pixmap(32));
-//     msgPopup.setWindowTitle(title);
-//     msgPopup.setText(title);
-//     msgPopup.setInformativeText(message);
-//     msgPopup.setStandardButtons(QMessageBox::Ok);
-//     msgPopup.exec();
-// }
-
 
 void SourceEDA::openProjectPopup(void)
 {
@@ -271,33 +238,7 @@ void SourceEDA::reloadLibraries(void) {
 }
 
 
-// CREATE LIB POPUP
-void SourceEDA::libListContextMenu(const QPoint &pos) {
-    QMenu contextMenu(tr("Context menu"), this);
 
-    QAction create_lib_action("Create library", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    connect(&create_lib_action, &QAction::triggered, createLibPopup, &CreateLib::openCreateLibPopup);
-
-    QAction rename_lib_action("Rename library", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    QAction delete_lib_action("Delete library", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-
-    QListWidgetItem *item = ui->lib_list->itemAt(pos);
-    if(item != nullptr) {
-        // TODO: connect actions to a slot
-        connect(&rename_lib_action, &QAction::triggered, this, [this, item]() {
-            SourceEDA::openRenameLibPopup(item->text());}
-        );
-        contextMenu.addAction(&rename_lib_action);
-        contextMenu.addAction(&delete_lib_action);
-        contextMenu.addSeparator();
-    }
-
-    contextMenu.addSeparator();
-
-    contextMenu.addAction(&create_lib_action);
-
-    contextMenu.exec(ui->lib_list->mapToGlobal(pos));
-}
 
 void SourceEDA::openRenameLibPopup(const QString &oldName)
 {
@@ -323,89 +264,8 @@ void SourceEDA::renameLib(void) {
     // }
 }
 
-void SourceEDA::cellListContextMenu(const QPoint &pos) {
-    QMenu contextMenu(tr("Context menu"), this);
-
-    QAction create_cell_action("Create cell here", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    connect(&create_cell_action, &QAction::triggered, createCellPopup,
-            [=]() { createCellPopup->openCreateCellPopup(ui->lib_list->currentItem()); }); // lambda to pass a parameter to slot
-
-    QAction rename_cell_action("Rename cell", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    QAction delete_cell_action("Delete cell", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    // TODO: connect actions to a slot
-
-    QListWidgetItem *item = ui->cell_list->itemAt(pos);
-    if(item != nullptr) {
-        contextMenu.addAction(&rename_cell_action);
-        contextMenu.addAction(&delete_cell_action);
-
-        contextMenu.addSeparator();
-    }
-
-    contextMenu.addSeparator();
-
-    contextMenu.addAction(&create_cell_action);
-
-    contextMenu.exec(ui->cell_list->mapToGlobal(pos));
-}
 
 
-void SourceEDA::cellviewListContextMenu(const QPoint &pos) {
-    QMenu contextMenu(tr("Context menu"), this);
-
-    QAction create_cellview_action("Create cellview here", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    connect(&create_cellview_action, &QAction::triggered, createCellviewPopup,
-            [=]() { createCellviewPopup->openCreateCellviewPopup(ui->lib_list->currentItem()->text(), ui->cell_list->currentItem()->text()); }); // lambda to pass a parameter to slot
-
-    QAction rename_cellview_action("Rename cellview", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    QAction delete_cellview_action("Delete cellview", this); // TODO: here could use pointer to globalise ? useless ? take more memory for nothing ?
-    // TODO: connect actions to a slot
-
-    QListWidgetItem *item = ui->cellview_list->itemAt(pos);
-    if(item != nullptr) {
-        contextMenu.addAction(&rename_cellview_action);
-        contextMenu.addAction(&delete_cellview_action);
-
-        contextMenu.addSeparator();
-    }
-
-    contextMenu.addSeparator();
-
-    contextMenu.addAction(&create_cellview_action);
-
-    contextMenu.exec(ui->cellview_list->mapToGlobal(pos));
-}
-
-
-
-void SourceEDA::unfoldLib(QListWidgetItem *lib_item) {
-    ui->lib_list->setSelectionMode(QAbstractItemView::SingleSelection);
-    lib_item->setSelected(true);
-    ui->lib_list->setSelectionMode(QAbstractItemView::NoSelection); // TODO: awful ? betterway ? cancel single click selection
-
-    ui->cellview_list->setEnabled(false);
-    ui->cellview_list->clear();
-
-    ui->cell_list->setEnabled(true);
-    ui->cell_list->clear();
-
-    for(QString cell_name : libManager->getCellsFromLib(lib_item->text())) {
-        ui->cell_list->addItem( new QListWidgetItem(QIcon::fromTheme("cell"), cell_name, 0) );
-    }
-}
-void SourceEDA::unfoldCell(QListWidgetItem *cell_item) {
-    ui->cell_list->setSelectionMode(QAbstractItemView::SingleSelection);
-    cell_item->setSelected(true);
-    ui->cell_list->setSelectionMode(QAbstractItemView::NoSelection); // TODO: awful ? betterway ? cancel single click selection
-
-    ui->cellview_list->setEnabled(true);
-    ui->cellview_list->clear();
-
-    for(QString cellview_name : libManager->getCellviewsFromCell(ui->lib_list->currentItem()->text(), cell_item->text())) {
-        //TODO: add item with icon (depding on type), change getter to send name + type
-        ui->cellview_list->addItem(cellview_name);
-    }
-}
 void SourceEDA::openCellview(QListWidgetItem *cellview_item) {
     DesignWindow *new_window = new DesignWindow(ui->lib_list->currentItem()->text(), ui->cell_list->currentItem()->text(),
                                                 cellview_item->text(), this);
@@ -415,8 +275,6 @@ void SourceEDA::openCellview(QListWidgetItem *cellview_item) {
 
     new_window->show();
 }
-
-
 
 // GETTERS / SETTERS
 // getter / setters
@@ -449,5 +307,23 @@ void SourceEDA::addCellview(const QString & libName, const QString & cellName, c
         ui->cellview_list->addItem( new QListWidgetItem(QIcon::fromTheme(typeName),
                                                    name, 0) );
     }
+}
 
+void SourceEDA::clearCellviews(bool enabled) {
+    ui->cellview_list->setEnabled(enabled);
+    ui->cellview_list->clear();
+}
+
+void SourceEDA::clearCells(bool enabled) {
+    ui->cell_list->setEnabled(enabled);
+    ui->cell_list->clear();
+}
+
+void SourceEDA::showCell(const QString &libName) {
+    ui->cell_list->showCell(libName);
+}
+
+
+void SourceEDA::showCellview(const QString &libName, const QString &cellName) {
+    ui->cellview_list->showCellview(libName, cellName);
 }

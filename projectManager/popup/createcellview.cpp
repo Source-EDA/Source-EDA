@@ -1,5 +1,6 @@
 #include "createcellview.hpp"
 #include "../librarymanager.hpp"
+#include "log.hpp"
 
 CreateCellview::CreateCellview(SourceEDA *parent, Qt::WindowFlags f) : QDialog(parent, f) {
     seda = parent;
@@ -19,6 +20,9 @@ void CreateCellview::openCreateCellviewPopup(const QString &for_lib, const QStri
     if(this->isVisible()) {
         this->raise();
     } else {
+        this->current_lib = for_lib;
+        this->current_cell = for_cell;
+
         uiCellviewPopup->libCombo->clear();
         LibraryManager * libManager = seda->getLibraryManager(); 
         for(json lib : *libManager->getDb()) {
@@ -56,10 +60,13 @@ void CreateCellview::createCellview(void) {
                                                     uiCellviewPopup->typeCombo->currentText(),
                                                     uiCellviewPopup->nameEdit->text());
     if(!errCode) {
-        seda->addCellview(uiCellviewPopup->libCombo->currentText(), 
-                          uiCellviewPopup->cellCombo->currentText(),
-                          uiCellviewPopup->typeCombo->currentText(),
-                          uiCellviewPopup->nameEdit->text());
+        seda->clearCellviews(true);
+        seda->showCellview(this->current_lib, this->current_cell);
+
+        // seda->addCellview(uiCellviewPopup->libCombo->currentText(), 
+        //                   uiCellviewPopup->cellCombo->currentText(),
+        //                   uiCellviewPopup->typeCombo->currentText(),
+        //                   uiCellviewPopup->nameEdit->text());
         this->close();
     } else {
         uiCellviewPopup->errorLabel->setText(tr("Error")); // TODO: better error

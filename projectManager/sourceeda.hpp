@@ -8,17 +8,22 @@
 #include <QFileDialog>
 #include <QListWidgetItem>
 
+#include "librarymanager.hpp"
+#include "../designwindow.hpp"
+
+// class SourceEDA;
+
+#include "popup/createlib.hpp"
+#include "popup/createcellview.hpp"
+#include "popup/createcell.hpp"
+
+
+#include "parts/liblist.hpp"
 #include "../ui/ui_mumwindow.h"
 #include "../ui/ui_create_cellview_popup.h"
 #include "../ui/ui_rename_lib_popup.h"
 
 #include "../ext_libs/json.hpp"
-
-#include "librarymanager.hpp"
-#include "../designwindow.hpp"
-#include "popup/createlib.hpp"
-#include "popup/createcellview.hpp"
-#include "popup/createcell.hpp"
 
 
 #define SEDA_VERSION 0.1
@@ -26,9 +31,9 @@
 
 using json = nlohmann::json;
 
-class CreateLib;
-class CreateCell;
-class CreateCellview;
+// class CreateLib;
+// class CreateCell;
+// class CreateCellview;
 
 enum seda_msg_type {MSG_INFO = 0, MSG_WARNING, MSG_ERROR};
 enum project_parse_error {PRO_PARSE_SUCCESS = 0, PRO_PARSE_MISSING_DATA, PRO_PARSE_WRONG_FORMAT, PRO_PARSE_WRONG_VERSION};
@@ -57,8 +62,16 @@ public:
     void addCell(QString &lib, QString &name);
     void addCellview(const QString & libName, const QString & cellName, const QString & typeName, const QString &name);
 
+    void clearCellviews(bool enabled);
+    void clearCells(bool enabled);
+
+    void showCell(const QString &libName);
+    void showCellview(const QString &libName, const QString &cellName);
+
+
+
 public slots:
-    void unfoldLib(QListWidgetItem *lib_item);
+    // void unfoldLib(QListWidgetItem *lib_item);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -85,7 +98,7 @@ private:
     vector<DesignWindow*> design_windows;
 
     //general variables
-    QString stylesheetContent;
+    // QString stylesheetContent;
     QFile *project_file;
     QString project_path;
     json project_data;
@@ -113,16 +126,16 @@ private:
 private slots:
     void openProjectPopup(void);
 
-    void libListContextMenu(const QPoint &pos);
+    // void libListContextMenu(const QPoint &pos);
 
-    void cellListContextMenu(const QPoint &pos);
+    // void cellListContextMenu(const QPoint &pos);
     // void openCreateCellPopup(const QString &for_lib = "");
     // void createCell(void);
-    void cellviewListContextMenu(const QPoint &pos);
+    // void cellviewListContextMenu(const QPoint &pos);
     // void openCreateCellviewPopup(const QString &for_lib = "", const QString &for_cell = "", const QString &cv_type = "");
     // void updateCellviewCells(const QString &lib_name);
     // void createCellview(void);
-    void unfoldCell(QListWidgetItem *cell_item);
+    // void unfoldCell(QListWidgetItem *cell_item);
     void openCellview(QListWidgetItem *cellview_item);
     void openRenameLibPopup(const QString &oldName);
     void renameLib(void);

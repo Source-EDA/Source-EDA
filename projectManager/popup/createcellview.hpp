@@ -10,6 +10,9 @@
 #include <QListWidgetItem>
 
 #include "../../ui/ui_create_cellview_popup.h"
+
+class CreateCellview;
+
 #include "../sourceeda.hpp"
 
 
@@ -21,6 +24,8 @@ class CreateCellview : public QDialog
 public:
     CreateCellview(SourceEDA *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~CreateCellview();
+
+public slots:
     void createCellview(void);
     void openCreateCellviewPopup(const QString &for_lib = "", const QString &for_cell = "", const QString &cv_type = "");
 
@@ -28,6 +33,8 @@ private:
     // graphical functions
     void setupMenusActions(void);
     void setupMenus(void);
+    QString current_lib;
+    QString current_cell;
 
     Ui::CreateCellviewPopup *uiCellviewPopup;
 

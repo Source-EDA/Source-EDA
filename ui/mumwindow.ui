@@ -62,7 +62,7 @@
          <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
         </property>
         <item>
-         <widget class="QListWidget" name="lib_list">
+         <widget class="LibList" name="lib_list">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -84,7 +84,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="cell_list">
+         <widget class="CellList" name="cell_list">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -97,7 +97,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="cellview_list">
+         <widget class="CellviewList" name="cellview_list">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -169,7 +169,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>36</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -203,6 +203,23 @@
    </attribute>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LibList</class>
+   <extends>QListWidget</extends>
+   <header>projectManager/parts/liblist.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>CellList</class>
+   <extends>QListWidget</extends>
+   <header>projectManager/parts/celllist.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>CellviewList</class>
+   <extends>QListWidget</extends>
+   <header>projectManager/parts/cellviewlist.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

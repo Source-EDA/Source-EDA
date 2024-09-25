@@ -9,6 +9,8 @@
 #include <QFileDialog>
 #include <QListWidgetItem>
 
+class CreateCell;
+
 #include "../../ui/ui_create_cell_popup.h"
 #include "../sourceeda.hpp"
 
@@ -24,7 +26,7 @@ public:
 
 public slots:
 
-    void openCreateCellPopup(QListWidgetItem *for_lib = NULL);
+    void openCreateCellPopup(const QString &for_lib = "");
     // void openCreateCellPopupNoLib(void);
     void createCell(void);
 
@@ -33,7 +35,7 @@ private:
     void setupMenusActions(void);
     void setupMenus(void);
     Ui::CreateCellPopup *uiCellPopup;
-    QListWidgetItem *current_lib;
+    QString current_lib;
 
     SourceEDA *seda;
 

@@ -10,8 +10,11 @@
 #include <QListWidgetItem>
 
 #include "../../ui/ui_create_lib_popup.h"
-#include "../sourceeda.hpp"
 
+
+class CreateLib;
+
+#include "../sourceeda.hpp"
 
 
 class CreateLib : public QWidget
