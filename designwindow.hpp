@@ -2,6 +2,8 @@
 #define DESIGNWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 namespace Ui {
 class DesignWindow;
@@ -20,6 +22,9 @@ public:
 private:
     Ui::DesignWindow *ui;
     SourceEDA *parent;
+
+    QGraphicsScene *scene;
+    QGraphicsView *view;
 };
 
 #endif // DESIGNWINDOW_H
